@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+# Vscode makes me want to kill myself
+*.json
+
 # Compiled Object files
 *.slo
 *.lo
