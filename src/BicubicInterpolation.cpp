@@ -1,19 +1,35 @@
-//4 by 4 grid will be split into 9 functions with derivatives and coefficients being global variables.//
-//this design limits the size of interpolation to a 4x4 square which is sub-optimal and should be changed later//
-//possibly a "function" class could be created that stores the coefficients of that quadrant//
-//This could allow bicubic functions that are more than 4x4 and/or rectangular//
-//defining "function" inside of BicubicInterpolation might be a good idea so I wont have to deal with header files//
-//input should look something like BicubicInterpolatingFunction(double xval[], double yval[], doulbe fval[][])//
-
 #include <iostream>
 #include <vector>
 
 class Function{
 private:
     std::vector<std::vector<double>> coefficients;
+    std::vector<std::vector<int>> A1 = {{1,0,0,0},{0,0,1,0},{-3,3,-2,-1},{2,-2,1,1}};
+    std::vector<std::vector<int>> A2 = {{1,0,-3,2},{0,0,3,-2},{0,1,-2,1},{0,0,-1,1}};
 public:
-    Function(){
+    //This is not very well optimized something like strassen method could make this faster and simpler//////////////////////////////////////////////////////////////////////
+    Function(std::vector<std::vector<double>> funcvals){
+        std::vector<std::vector<double>> temp;
+        for(int i = 0; i < A1.size(); i++){
+            for(int j = 0; j < funcvals.at(0).size(); j++){
+                for(int k = 0; k < A1.at(0).size(); k++){
+                    temp[i][j] += A1[i][k] * funcvals[k][j];
+                }
+            }
+        }
 
+        for(int i = 0; i < temp.size(); i++){
+            for(int j = 0; j < A2.at(0).size(); j++){
+                for(int k = 0; k < temp.at(0).size(); k++){
+                    coefficients[i][j] += temp[i][k] * A2[k][j];
+                }
+            }
+        }
+    }
+
+    double interpolate(double x, double y){
+        
+        return 0.00;//delete later///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 };
 
@@ -22,7 +38,7 @@ private:
     std::vector<std::vector<double>> dfdx;
     std::vector<std::vector<double>> dfdy;
     std::vector<std::vector<double>> df2dxdy;
-    std::vector<Function> functions;
+    std::vector<std::vector<Function>> functions;
 public:
     BicubicInterpolation(std::vector<double> xval, std::vector<double> yval, std::vector<std::vector<double>> fval){
 
