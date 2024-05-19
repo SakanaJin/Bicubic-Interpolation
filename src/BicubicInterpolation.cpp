@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <math.h>
 
 class Function{
 private:
@@ -28,8 +29,15 @@ public:
     }
 
     double interpolate(double x, double y){
+        double interpolated = 0;
+
+        for(int i = 0; i < 4; i++){
+            for(int j = 0; j < 4; j++){
+                interpolated += coefficients[i][j] * pow(x, i) * pow(y, j);
+            }
+        }
         
-        return 0.00;//delete later///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        return interpolated;
     }
 };
 
@@ -39,9 +47,32 @@ private:
     std::vector<std::vector<double>> dfdy;
     std::vector<std::vector<double>> df2dxdy;
     std::vector<std::vector<Function>> functions;
+
+    double partialDerivative(std::vector<double> xval, std::vector<double> fval, int index){
+        double derivative;
+        if(index == 0){
+            derivative = (fval[1] - fval[0]) / (xval[1] - xval[index]);
+            return derivative;
+        }
+        else if(index == xval.size() - 1){
+            derivative = (fval[xval.size() -1] - fval[xval.size() -2]) / (index - xval[xval.size()-2]);
+            return derivative;
+        }
+        else{
+            derivative = ((fval[index] - fval[index-1]) / (xval[index] - xval[index-1]) + (fval[index+1] - fval[index]) / (xval[index+1] - xval[index]))/2;
+            return derivative;
+        }
+    }
 public:
     BicubicInterpolation(std::vector<double> xval, std::vector<double> yval, std::vector<std::vector<double>> fval){
+        //make dfdx//
+        //make dfdy//
+        //make df2dxdy//
+        //make functions//
+    }
 
+    double interpolate(double x, double y){
+        return 0.00; //delete later////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 };
 
